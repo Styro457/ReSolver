@@ -51,26 +51,24 @@ def findObjects(outputs, img):
     indices = cv.dnn.NMSBoxes(bbox, confs, confThreshold, nmsThreshold)
 
     for i in indices:
-        i = i[0]
         box = bbox[i]
         x, y, w, h = box[0], box[1], box[2], box[3]
-        # print(x,y,w,h)
         cv.rectangle(img, (x, y), (x + w, y + h), (255, 0, 255), 2)
         cv.putText(img, f'{classNames[classIds[i]].upper()} {int(confs[i] * 100)}%',
                     (x, y - 10), cv.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 255), 2)
 
 #img = cv.imread("payload.jpg")
-img = url_to_image("https://www.google.com/recaptcha/api2/payload?p=06AGdBq25c9JqQuL8IzR_qICDU9A1XnUD7iHQy9y_-iP-lXOVSax5O0N2vGbEK7RxTsCBfaoCLmkK7Di0HvRJo6U6hXyXCGsRcVMOnEQxSXOUHKlnioEP0RvuhAoWAQ0HYRDcBxwG7Uvf0ipJTovCk0iy9WjVccj2bV3ENU2lNICcmTLt03HDnZXVAtgsroaZ42etpcuJtRGjVH0A-qsmNvwofSIZOJEYLQg&k=6Ld2sf4SAAAAAKSgzs0Q13IZhY02Pyo31S2jgOB5")
+img = url_to_image("https://i.imgur.com/aKq6lEe.png")
 while True:
     #success, img = cap.read()
 
     blob = cv.dnn.blobFromImage(img, 1 / 255, (whT, whT), [0, 0, 0], 1, crop=False)
     net.setInput(blob)
     layersNames = net.getLayerNames()
-    outputNames = [(layersNames[i[0] - 1]) for i in net.getUnconnectedOutLayers()]
+    outputNames = [layersNames[i-1] for i in net.getUnconnectedOutLayers()]
     outputs = net.forward(outputNames)
     findObjects(outputs, img)
 
     cv.imshow('Image', img)
     cv.waitKey(1)
-    #sleep(100)
+    sleep(100)
